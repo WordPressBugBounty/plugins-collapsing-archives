@@ -4,8 +4,8 @@ Donate link: http://robfelty.com/wordpress-plugins
 License: GPLv2
 Tags: collapse, archives, sidebar, widget, accordion
 Requires at least: 2.8
-Tested up to: 6.8.1
-Stable tag: 3.0.7
+Tested up to: 6.9.1
+Stable tag: 3.0.8
 
 This plugin uses Javascript to dynamically expand or collapse the set of months for each year and posts for each month in the archive listing of your blog..
 
@@ -217,6 +217,9 @@ I use this plugin in my blog at http://blog.robfelty.com
 
 
 == CHANGELOG ==
+
+= 3.0.8 (2026.02.11) =
+* Improved SQL queries to avoid possible SQL injection
 
 = 3.0.7 (2024.05.05) =
 * Fixed some PHP warnings and removed deprecated code

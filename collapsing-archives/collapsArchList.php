@@ -1,6 +1,6 @@
 <?php
 /*
-Collapsing Archives version: 3.0.7
+Collapsing Archives version: 3.0.8
 
 Copyright 2007-2017 Robert Felty
 
@@ -52,28 +52,28 @@ function list_archives($options) {
   } else {
     $inExcludeCatQuery ="AND $wpdb->terms.slug $in ($inExclusionsCat)";
   }
-	$inExclusionsYear = array();
+	$inExcludeYearQuery = "";
 	if ( !empty($inExcludeYear) && !empty($inExcludeYears) ) {
-		$exterms = preg_split('/[,]+/',$inExcludeYears);
-    if ($inExcludeYear=='include') {
-      $in='IN';
-    } else {
-      $in='NOT IN';
-    }
+		$exterms = preg_split('/[,]+/', $inExcludeYears);
+		// Validate $inExcludeYear to prevent SQL injection.
+		$in = ( $inExcludeYear === 'include' ) ? 'IN' : 'NOT IN';
 		if ( count($exterms) ) {
+			$sanitized_years = array();
 			foreach ( $exterms as $exterm ) {
-				if (empty($inExclusionsYear))
-					$inExclusionsYear = "'" .$exterm . "'";
-				else
-					$inExclusionsYear .= ", '" . $exterm . "' ";
+				$year = absint( trim( $exterm ) );
+				if ( $year > 0 ) {
+					$sanitized_years[] = $year;
+				}
+			}
+			if ( ! empty( $sanitized_years ) ) {
+				$placeholders = implode( ', ', array_fill( 0, count( $sanitized_years ), '%d' ) );
+				$inExcludeYearQuery = $wpdb->prepare(
+					"AND YEAR($wpdb->posts.post_date) $in ($placeholders)",
+					$sanitized_years
+				);
 			}
 		}
 	}
-	if ( empty($inExclusionsYear) ) {
-		$inExcludeYearQuery = "";
-  } else {
-    $inExcludeYearQuery ="AND YEAR($wpdb->posts.post_date) $in ($inExclusionsYear)";
-  }
 
   if (is_array($post_type)) {
     $postTypeQuery="AND $wpdb->posts.post_type IN (";
