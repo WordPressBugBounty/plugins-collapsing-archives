@@ -288,7 +288,7 @@ function list_archives($options) {
       $text = sprintf('%s', $month[zeroise($currentMonth,2)]);
 
       $text = wptexturize($text);
-      $title_text = wp_specialchars($text,1);
+      $title_text = esc_html($text,1);
 
       if (in_array($post_type, array('all', 'post'))) {
         $monthLink = get_month_link( $currentYear, $currentMonth );
